@@ -7,6 +7,7 @@ public class ProdutoPutRequest {
 	private String descricao;
 	private Double preco;
 	private Integer quantidade;
+	private Integer idFornecedor;
 
 	public Integer getIdProduto() {
 		return idProduto;
@@ -46,6 +47,14 @@ public class ProdutoPutRequest {
 
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
+	}
+
+	public Integer getIdFornecedor() {
+		return idFornecedor;
+	}
+
+	public void setIdFornecedor(Integer idFornecedor) {
+		this.idFornecedor = idFornecedor;
 	}
 
 }

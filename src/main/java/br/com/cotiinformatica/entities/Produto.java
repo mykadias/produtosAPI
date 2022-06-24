@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +36,10 @@ public class Produto {
 
 	@Column(name = "quantidade", nullable = false)
 	private Integer quantidade;
-	
+
+	@ManyToOne // Muitos produtos para 1 fornecedor
+	@JoinColumn(name = "idfornecedor") // campo chave estrangeira
+	private Fornecedor fornecedor;
 
 	public Integer getIdProduto() {
 		return idProduto;
@@ -50,6 +55,14 @@ public class Produto {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
 	}
 
 	public String getDescricao() {

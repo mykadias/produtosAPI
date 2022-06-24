@@ -1,5 +1,6 @@
 package br.com.cotiinformatica.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import br.com.cotiinformatica.entities.Fornecedor;
 import br.com.cotiinformatica.entities.Produto;
+import br.com.cotiinformatica.repositories.IFornecedorRepository;
 import br.com.cotiinformatica.repositories.IProdutoRepository;
 import br.com.cotiinformatica.requests.ProdutoPostRequest;
 import br.com.cotiinformatica.requests.ProdutoPutRequest;
+import br.com.cotiinformatica.responses.ProdutoGetResponse;
 
 @Transactional // habilitar o uso de repositorios da JPA
 @Controller
@@ -26,11 +30,23 @@ public class ProdutosController {
 	@Autowired // autoinicialização
 	private IProdutoRepository produtoRepository;
 
+	@Autowired // autoinicialização
+
+	private IFornecedorRepository fornecedorRepository;
+
 	// Cadastro
 	@RequestMapping(value = "/api/produtos", method = RequestMethod.POST)
 	public ResponseEntity<String> post(@RequestBody ProdutoPostRequest request) {
 
 		try {
+			// obter o fornecedor através do ID no banco de dados
+			Optional<Fornecedor> consulta = fornecedorRepository.findById(request.getIdFornecedor());
+
+			// verificar se o fornecedor não foi encontrado
+			if (consulta.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body("Fornecedor nao encontrado, verifique o ID informado.");
+			}
 
 			Produto produto = new Produto();
 
@@ -38,6 +54,7 @@ public class ProdutosController {
 			produto.setDescricao(request.getDescricao());
 			produto.setPreco(request.getPreco());
 			produto.setQuantidade(request.getQuantidade());
+			produto.setFornecedor(consulta.get()); // associando o fornecedor do produto
 
 			produtoRepository.save(produto);
 
@@ -55,6 +72,16 @@ public class ProdutosController {
 	public ResponseEntity<String> put(@RequestBody ProdutoPutRequest request) {
 
 		try {
+
+			// consultar o fornecedor no banco de dados através do ID
+			Optional<Fornecedor> consulta = fornecedorRepository.findById(request.getIdFornecedor());
+
+			// verificar se o fornecedor não foi encontrado
+			if (consulta.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body("Fornecedor nao encontrado, verifique o ID informado.");
+			}
+
 			Produto produto = new Produto();
 
 			produto.setIdProduto(request.getIdProduto());
@@ -62,6 +89,7 @@ public class ProdutosController {
 			produto.setDescricao(request.getDescricao());
 			produto.setPreco(request.getPreco());
 			produto.setQuantidade(request.getQuantidade());
+			produto.setFornecedor(consulta.get()); // associando o fornecedor do produto
 
 			produtoRepository.save(produto);
 
@@ -104,26 +132,39 @@ public class ProdutosController {
 
 	// Consulta de todos
 	@RequestMapping(value = "/api/produtos", method = RequestMethod.GET)
-	public ResponseEntity<List<Produto>> getAll() {
-
+	public ResponseEntity<List<ProdutoGetResponse>> getAll() {
 		try {
-
 			// obtendo uma lista de produtos do banco de dados
 			List<Produto> produtos = (List<Produto>) produtoRepository.findAll();
+			
+			List<ProdutoGetResponse> lista = new ArrayList<ProdutoGetResponse>();
+			
+			// percorrer os produtos obtidos no banco de dados
+			for (Produto produto : produtos) {
+				ProdutoGetResponse response = new ProdutoGetResponse();
+				response.setIdProduto(produto.getIdProduto());
+				response.setNome(produto.getNome());
+				response.setPreco(produto.getPreco());
+				response.setQuantidade(produto.getQuantidade());
+				response.setTotal(produto.getPreco() * produto.getQuantidade());
+				response.setDescricao(produto.getDescricao());
+				response.setIdFornecedor(produto.getFornecedor().getIdFornecedor());
+				response.setNomeFornecedor(produto.getFornecedor().getNome());
+				response.setCnpjFornecedor(produto.getFornecedor().getCnpj());
+				lista.add(response);
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(lista);
 
-			return ResponseEntity.status(HttpStatus.OK).body(produtos);
-
-		} 
-		catch (Exception e) {
-
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+
 		}
 
 	}
 
 	// Consulta pelo ID
 	@RequestMapping(value = "/api/produtos/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Produto> getById(@PathVariable("id") Integer id) {
+	public ResponseEntity<ProdutoGetResponse> getById(@PathVariable("id") Integer id) {
 
 		try {
 
@@ -132,18 +173,30 @@ public class ProdutosController {
 
 			// verificando se o produto foi encontrado
 			if (consulta.isPresent()) {
-				
+
 				// capturando o produto obtido na consulta
 				Produto produto = consulta.get();
+				
+				ProdutoGetResponse response =  new ProdutoGetResponse();
+		
+				response.setIdProduto(produto.getIdProduto());
+				response.setNome(produto.getNome());
+				response.setPreco(produto.getPreco());
+				response.setQuantidade(produto.getQuantidade());
+				response.setTotal(produto.getPreco() * produto.getQuantidade());
+				response.setDescricao(produto.getDescricao());
+				response.setIdFornecedor(produto.getFornecedor().getIdFornecedor());
+				response.setNomeFornecedor(produto.getFornecedor().getNome());
+				response.setCnpjFornecedor(produto.getFornecedor().getCnpj());
 
-				return ResponseEntity.status(HttpStatus.OK).body(produto);
+				return ResponseEntity.status(HttpStatus.OK).body(response);
+				
 			} else {
-				//NO CONTENT - nenhum resultado foi encontrado (não é erro)
+				// NO CONTENT - nenhum resultado foi encontrado (não é erro)
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 			}
-		
-		} 
-		catch (Exception e) {
+
+		} catch (Exception e) {
 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
