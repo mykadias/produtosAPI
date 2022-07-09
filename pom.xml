@@ -26,6 +26,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- dependências para desenvolvimento WebAPI com SpringBoot -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -35,6 +36,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<!-- dependência para Hibernate e JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -44,12 +46,14 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
 		<!-- Dependências do Swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -61,10 +65,35 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<artifactId>springfox-boot-starter</artifactId>
 			<version>3.0.0</version>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<!-- Autenticação com JWT -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -76,7 +105,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.1.0</version><!--$NO-MVN-MAN-VER$-->
+				<version>3.1.0</version> <!--$NO-MVN-MAN-VER$-->
 			</plugin>
 		</plugins>
 	</build>

@@ -136,9 +136,9 @@ public class ProdutosController {
 		try {
 			// obtendo uma lista de produtos do banco de dados
 			List<Produto> produtos = (List<Produto>) produtoRepository.findAll();
-			
+
 			List<ProdutoGetResponse> lista = new ArrayList<ProdutoGetResponse>();
-			
+
 			// percorrer os produtos obtidos no banco de dados
 			for (Produto produto : produtos) {
 				ProdutoGetResponse response = new ProdutoGetResponse();
@@ -176,9 +176,9 @@ public class ProdutosController {
 
 				// capturando o produto obtido na consulta
 				Produto produto = consulta.get();
-				
-				ProdutoGetResponse response =  new ProdutoGetResponse();
-		
+
+				ProdutoGetResponse response = new ProdutoGetResponse();
+
 				response.setIdProduto(produto.getIdProduto());
 				response.setNome(produto.getNome());
 				response.setPreco(produto.getPreco());
@@ -190,12 +190,44 @@ public class ProdutosController {
 				response.setCnpjFornecedor(produto.getFornecedor().getCnpj());
 
 				return ResponseEntity.status(HttpStatus.OK).body(response);
-				
+
 			} else {
 				// NO CONTENT - nenhum resultado foi encontrado (não é erro)
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 			}
 
+		} catch (Exception e) {
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
+
+	@RequestMapping(value = "/api/produtos/obter-por-nome/{nome}", method = RequestMethod.GET)
+	public ResponseEntity<List<ProdutoGetResponse>> findByNome(@PathVariable("nome") String nome) {
+
+		try {
+
+			List<Produto> produtos = (List<Produto>) produtoRepository.findByNome(nome);
+			List<ProdutoGetResponse> lista = new ArrayList<ProdutoGetResponse>();
+
+			for (Produto produto : produtos) {
+
+				ProdutoGetResponse response = new ProdutoGetResponse();
+
+				response.setIdProduto(produto.getIdProduto());
+				response.setNome(produto.getNome());
+				response.setPreco(produto.getPreco());
+				response.setQuantidade(produto.getQuantidade());
+				response.setTotal(produto.getPreco() * produto.getQuantidade());
+				response.setDescricao(produto.getDescricao());
+				response.setIdFornecedor(produto.getFornecedor().getIdFornecedor());
+				response.setNomeFornecedor(produto.getFornecedor().getNome());
+				response.setCnpjFornecedor(produto.getFornecedor().getCnpj());
+
+				lista.add(response);
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(lista);
 		} catch (Exception e) {
 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

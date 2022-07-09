@@ -1,6 +1,7 @@
 package br.com.cotiinformatica.controllers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -104,7 +105,7 @@ public class FornecedoresController {
 
 			for (Fornecedor fornecedor : fornecedores) {
 				FornecedorGetResponse response = new FornecedorGetResponse();
-				
+
 				response.setIdFornecedor(fornecedor.getIdFornecedor());
 				response.setNome(fornecedor.getNome());
 				response.setCnpj(fornecedor.getCnpj());
@@ -131,11 +132,11 @@ public class FornecedoresController {
 
 				Fornecedor fornecedor = consulta.get();
 				FornecedorGetResponse response = new FornecedorGetResponse();
-				
+
 				response.setIdFornecedor(fornecedor.getIdFornecedor());
 				response.setNome(fornecedor.getNome());
 				response.setCnpj(fornecedor.getCnpj());
-				
+
 				return ResponseEntity.status(HttpStatus.OK).body(response);
 			} else {
 
@@ -146,6 +147,32 @@ public class FornecedoresController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 
+	}
+
+	@RequestMapping(value = "api/fornecedores/obter-por-nome/{nome}", method = RequestMethod.GET)
+	public ResponseEntity<List<FornecedorGetResponse>> getByNome(@PathVariable("nome") String nome) {
+		try {
+
+			List<Fornecedor> fornecedores = fornecedorRepository.findByNome(nome);
+			List<FornecedorGetResponse> lista = new ArrayList<FornecedorGetResponse>();
+
+			for (Fornecedor fornecedor : fornecedores) {
+				FornecedorGetResponse response = new FornecedorGetResponse();
+
+				response.setIdFornecedor(fornecedor.getIdFornecedor());
+				response.setNome(fornecedor.getNome());
+				response.setCnpj(fornecedor.getCnpj());
+				
+				lista.add(response);
+				
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(lista);
+
+		} catch (Exception e) {
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
 	}
 
 }
