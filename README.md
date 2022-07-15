@@ -1,4 +1,4 @@
-# Sistema de ProdutosWeb
+# Sistema de ProdutosAPI
 > Uma API desenvolvida para cadastro e consulta de produtos.
 
 ## Projeto desenvolvido em Java e Spring Boot
