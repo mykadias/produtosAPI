@@ -1,9 +1,9 @@
-# Getting Started
+#ProdutosAPI
+###API feita para controle de produtos.
 
-### Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.7.0/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.7.0/maven-plugin/reference/html/#build-image)
-
+####Tecnologias e ferramentas utilizadas:
+1.Spring
+2.Maven
+3.PostegreSQL
+4.Swagger
+5.
